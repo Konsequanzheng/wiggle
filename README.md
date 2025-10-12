@@ -12,19 +12,10 @@ Wiggle is an innovative platform that transforms user-uploaded images into custo
 
 ## 🏗️ Architecture
 
-```
-┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
-│   Frontend      │    │   Backend API   │    │  Modal Cloud    │
-│   (Next.js)     │◄──►│   (FastAPI)     │◄──►│   (Blender +    │
-│                 │    │                 │    │    AI Models)   │
-└─────────────────┘    └─────────────────┘    └─────────────────┘
-                              │
-                              ▼
-                       ┌─────────────────┐
-                       │   Weaviate DB   │
-                       │  (Vector Store) │
-                       └─────────────────┘
-```
+![Architecture Diagram](Architecture.png)
+
+The platform follows a modern cloud-native architecture:
+
 
 ## 📁 Project Structure
 
@@ -48,6 +39,8 @@ Wiggle is an innovative platform that transforms user-uploaded images into custo
 ```
 
 ## 🛠️ Technology Stack
+
+![Technology Stack](TechStack.png)
 
 ### Frontend
 - **Next.js 14** - React framework with App Router
@@ -140,11 +133,19 @@ Response:
 
 ## 🔄 N8N Workflow Integration
 
-The project includes a pre-configured N8N workflow for automation:
+![N8N Workflow](n8n.png)
+
+The project includes a pre-configured N8N workflow for complete automation:
 
 - **File**: `wiggle/backend/n8n_workflow.json`
-- **Features**: Automated texture generation, webhook integration, database storage
+- **Features**: 
+  - Automated texture generation pipeline
+  - Webhook integration for external triggers
+  - Database storage with Weaviate
+  - Error handling and logging
+  - File management and cleanup
 - **Setup**: Import the JSON file into your N8N instance
+- **Documentation**: See [N8N Deployment Guide](wiggle/backend/N8N_DEPLOYMENT_GUIDE.md) for detailed setup instructions
 
 ## 🧪 Testing
 
