@@ -1,0 +1,357 @@
+{
+  "name": "Build T-shirt Texture (front/back → texture.png)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "build-texture",
+        "options": {
+          "responseMode": "responseNode",
+          "rawBody": false
+        }
+      },
+      "id": "Webhook_In",
+      "name": "Webhook In",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [280, 300]
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "userId",
+              "name": "userId",
+              "value": "={{ $json.body.userId || 'anonymous' }}",
+              "type": "string"
+            },
+            {
+              "id": "frontImageUrl",
+              "name": "frontImageUrl",
+              "value": "={{ $json.body.frontImageUrl || '' }}",
+              "type": "string"
+            },
+            {
+              "id": "backImageUrl",
+              "name": "backImageUrl",
+              "value": "={{ $json.body.backImageUrl || '' }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "ExtractMetadata",
+      "name": "Extract Metadata",
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3,
+      "position": [430, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://26ba8375cc00.ngrok-free.app/api/builds/create",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "userId",
+              "value": "={{ $json.userId }}"
+            },
+            {
+              "name": "frontImageUrl",
+              "value": "={{ $json.frontImageUrl }}"
+            },
+            {
+              "name": "backImageUrl",
+              "value": "={{ $json.backImageUrl }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "CreateBuildRecord",
+      "name": "Create Build Record (Weaviate)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [580, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ykzou1214--tshirt-texture-modal--asgi-app.modal.run/build-texture",
+        "sendBody": true,
+        "contentType": "multipart-form-data",
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "front",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "front"
+            },
+            {
+              "name": "back",
+              "parameterType": "formBinaryData",
+              "inputDataFieldName": "back"
+            }
+          ]
+        },
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          }
+        }
+      },
+      "id": "HTTP_BuildTexture",
+      "name": "HTTP Request - Build Texture",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [680, 300]
+    },
+    {
+      "parameters": {
+        "mode": "binaryToBinary",
+        "binaryPropertyName": "data",
+        "newBinaryPropertyName": "texture"
+      },
+      "id": "RenameBinary",
+      "name": "Rename Binary → texture",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [850, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://26ba8375cc00.ngrok-free.app/api/builds/update",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "buildId",
+              "value": "={{ $('Create Build Record (Weaviate)').item.json.buildId }}"
+            },
+            {
+              "name": "textureUrl",
+              "value": "temporary://texture.png"
+            },
+            {
+              "name": "status",
+              "value": "texture_generated"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "UpdateTextureUrl",
+      "name": "Update Texture URL (Weaviate)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1000, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://ykzou1214--tshirt-blender-service-apply-texture-to-model.modal.run",
+        "sendBody": true,
+        "contentType": "raw",
+        "rawContentType": "application/octet-stream",
+        "body": "={{ $binary.texture.data }}",
+        "options": {
+          "response": {
+            "response": {
+              "responseFormat": "file"
+            }
+          },
+          "timeout": 600000
+        }
+      },
+      "id": "HTTP_ApplyTexture",
+      "name": "HTTP Request - Apply Texture to Model",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1150, 300]
+    },
+    {
+      "parameters": {
+        "mode": "binaryToBinary",
+        "binaryPropertyName": "data",
+        "newBinaryPropertyName": "model"
+      },
+      "id": "RenameModelBinary",
+      "name": "Rename Binary → model",
+      "type": "n8n-nodes-base.moveBinaryData",
+      "typeVersion": 1,
+      "position": [1300, 300]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://26ba8375cc00.ngrok-free.app/api/builds/complete",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "buildId",
+              "value": "={{ $('Create Build Record (Weaviate)').item.json.buildId }}"
+            },
+            {
+              "name": "modelUrl",
+              "value": "temporary://model_textured.glb"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "id": "CompleteBUILD",
+      "name": "Complete Build (Weaviate)",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4,
+      "position": [1450, 300]
+    },
+    {
+      "parameters": {
+        "respondWith": "binary",
+        "binaryPropertyName": "model",
+        "options": {
+          "responseHeaders": {
+            "entries": [
+              {
+                "name": "Content-Type",
+                "value": "model/gltf-binary"
+              },
+              {
+                "name": "Content-Disposition",
+                "value": "inline; filename=\"model_textured.glb\""
+              }
+            ]
+          }
+        }
+      },
+      "id": "Respond",
+      "name": "Respond to Webhook (model.glb)",
+      "type": "n8n-nodes-base.respondToWebhook",
+      "typeVersion": 1,
+      "position": [1600, 300]
+    }
+  ],
+  "connections": {
+    "Webhook In": {
+      "main": [
+        [
+          {
+            "node": "Extract Metadata",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract Metadata": {
+      "main": [
+        [
+          {
+            "node": "Create Build Record (Weaviate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create Build Record (Weaviate)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Build Texture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Build Texture": {
+      "main": [
+        [
+          {
+            "node": "Rename Binary → texture",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Binary → texture": {
+      "main": [
+        [
+          {
+            "node": "Update Texture URL (Weaviate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update Texture URL (Weaviate)": {
+      "main": [
+        [
+          {
+            "node": "HTTP Request - Apply Texture to Model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "HTTP Request - Apply Texture to Model": {
+      "main": [
+        [
+          {
+            "node": "Rename Binary → model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Rename Binary → model": {
+      "main": [
+        [
+          {
+            "node": "Complete Build (Weaviate)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Complete Build (Weaviate)": {
+      "main": [
+        [
+          {
+            "node": "Respond to Webhook (model.glb)",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "settings": {
+    "executionOrder": "v1",
+    "saveManualExecutions": true
+  },
+  "pinData": {},
+  "tags": [
+    {
+      "name": "image",
+      "id": "tag-image"
+    },
+    {
+      "name": "texture",
+      "id": "tag-texture"
+    }
+  ]
+}
