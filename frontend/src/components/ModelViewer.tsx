@@ -61,7 +61,7 @@ function Model({ url }: { url: string }) {
   });
 
   return (
-    <group ref={meshRef}>
+    <group ref={meshRef} position={[0, 2.5, 0]}>
       <primitive object={scene} scale={1} />
     </group>
   );
@@ -70,17 +70,17 @@ function Model({ url }: { url: string }) {
 export default function ModelViewer() {
   return (
     <div className="w-full h-screen bg-gray-100">
-      <Canvas camera={{ position: [0, 0, 5], fov: 75 }}>
-        <ambientLight intensity={0.3} />
-        <directionalLight position={[10, 10, 5]} intensity={0.2} />
+      <Canvas camera={{ position: [0, 2, 6], fov: 75 }}>
+        <ambientLight intensity={1} />
+        <directionalLight position={[10, 10, 5]} intensity={1.4} />
         <Model url="/model.glb" />
         <OrbitControls
           enablePan={true}
-          enableZoom={true}
+          enableZoom={false}
           enableRotate={true}
           autoRotate={false}
+          target={[0, 0, 0]}
         />
-        <Environment preset="studio" />
       </Canvas>
     </div>
   );

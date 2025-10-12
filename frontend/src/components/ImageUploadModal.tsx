@@ -88,6 +88,40 @@ export function ImageUploadModal({
     if (canSubmit && frontImage && backImage) {
       setIsUploading(true);
 
+      // Skip API call in development mode
+      if (process.env.NODE_ENV === "development") {
+        console.log("Dev mode: Skipping API call, files would be sent:", {
+          frontImage: frontImage.name,
+          backImage: backImage.name,
+        });
+
+        // Get button position for localized confetti
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = (rect.left + rect.width / 2) / window.innerWidth;
+        const y = (rect.top + rect.height / 2) / window.innerHeight;
+
+        // Trigger subtle confetti animation around the button
+        confetti({
+          particleCount: 20,
+          spread: 40,
+          origin: { x, y },
+          colors: ["#1f2937"], // gray-800 to match logo
+          disableForReducedMotion: true,
+          ticks: 100,
+          gravity: 1,
+          scalar: 0.8, // Thinner ribbons
+          shapes: ["square"], // Ribbon-like particles
+          startVelocity: 15, // Slower upward movement
+          drift: 0, // No horizontal drift
+        });
+
+        // Small delay before transitioning to next page
+        setTimeout(() => {
+          onSubmit();
+        }, 300);
+        return;
+      }
+
       try {
         // Create FormData with the files
         const formData = new FormData();

@@ -16,6 +16,12 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(false);
   const [isComplete, setIsComplete] = useState(false);
 
+  // Skip to results page in development mode
+  if (process.env.NODE_ENV === "development") {
+    console.log("Dev mode: Skipping to ResultsPage");
+    return <ResultsPage />;
+  }
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setShowHero(false);

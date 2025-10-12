@@ -3,6 +3,7 @@
 import { motion } from "motion/react";
 import { Button } from "./ui/button";
 import { WormLogo } from "./WormLogo";
+import ModelViewer from "./ModelViewer";
 
 export function ResultsPage() {
   return (
@@ -64,62 +65,20 @@ export function ResultsPage() {
             transition={{ duration: 0.6, delay: 0.2 }}
             className="w-full max-w-2xl"
           >
-            <div className="w-full rounded-[2rem] border-2 border-gray-300/60 p-12 bg-white/50 flex flex-col">
-              {/* Placeholder for 3D rendering */}
-              <div className="text-gray-400 text-center px-8 mb-12">
-                <div className="w-64 h-64 mx-auto mb-6 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 flex items-center justify-center">
-                  <svg
-                    width="120"
-                    height="120"
-                    viewBox="0 0 80 80"
-                    className="text-gray-400"
-                  >
-                    <rect
-                      x="20"
-                      y="15"
-                      width="40"
-                      height="50"
-                      rx="4"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <path
-                      d="M 30 15 L 30 10 Q 30 5 35 5 L 45 5 Q 50 5 50 10 L 50 15"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="2"
-                    />
-                    <line
-                      x1="30"
-                      y1="30"
-                      x2="50"
-                      y2="30"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                    <line
-                      x1="30"
-                      y1="40"
-                      x2="50"
-                      y2="40"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                    <line
-                      x1="30"
-                      y1="50"
-                      x2="45"
-                      y2="50"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
-                    />
-                  </svg>
-                </div>
-                <p className="text-sm">Interactive model of your product</p>
+            <div className="w-full rounded-[2rem] border-2 border-gray-300/60 bg-white/50 overflow-hidden">
+              {/* 3D Model Viewer */}
+              <div className="h-96 w-full">
+                <ModelViewer />
               </div>
+            </div>
 
-              {/* Buttons */}
+            {/* Buttons below the box */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.4 }}
+              className="mt-6"
+            >
               <div className="flex gap-4">
                 <Button
                   variant="default"
@@ -134,7 +93,7 @@ export function ResultsPage() {
                   View Docs
                 </Button>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         </div>
       </div>
