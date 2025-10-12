@@ -1,5 +1,5 @@
-import ModelViewer from "../components/ModelViewer";
+import App from "../components/App";
 
 export default function Home() {
-  return <ModelViewer />;
+  return <App />;
 }
