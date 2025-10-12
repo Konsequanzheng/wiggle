@@ -152,14 +152,14 @@ The project includes a pre-configured N8N workflow for complete automation:
 ### Test the Complete Pipeline:
 ```bash
 # Test texture generation
-curl -X POST "https://your-modal-url/api/texture/generate" \
+curl -X POST "https://ykzou1214--wiggle-integrated-api-fastapi-app.modal.run/api/texture/generate" \
   -F "userId=test_user" \
   -F "front=@front.png" \
   -F "back=@back.png"
 
 # Download generated files
-curl -o model.glb "https://your-modal-url/api/model/download/model_id.glb"
-curl -o texture.png "https://your-modal-url/api/texture/download/texture_id.png"
+curl -o model.glb "https://ykzou1214--wiggle-integrated-api-fastapi-app.modal.run/api/model/download/model_id.glb"
+curl -o texture.png "https://ykzou1214--wiggle-integrated-api-fastapi-app.modal.run/api/texture/download/texture_id.png"
 ```
 
 ## 📊 Performance
