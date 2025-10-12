@@ -8,12 +8,9 @@ interface LoadingPageProps {
 }
 
 export function LoadingPage({ onComplete }: LoadingPageProps) {
-  const [isComplete, setIsComplete] = useState(false);
-
   useEffect(() => {
     // Simulate loading completion after animation
     const timer = setTimeout(() => {
-      setIsComplete(true);
       onComplete?.();
     }, 16500);
     return () => clearTimeout(timer);

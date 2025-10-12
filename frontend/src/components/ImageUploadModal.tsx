@@ -3,7 +3,6 @@
 import { motion, AnimatePresence } from "motion/react";
 import { useState } from "react";
 import { X } from "lucide-react";
-import confetti from "canvas-confetti";
 
 interface ImageUploadModalProps {
   isOpen: boolean;
@@ -92,21 +91,6 @@ export function ImageUploadModal({
       const rect = e.currentTarget.getBoundingClientRect();
       const x = (rect.left + rect.width / 2) / window.innerWidth;
       const y = (rect.top + rect.height / 2) / window.innerHeight;
-
-      // Trigger subtle confetti animation around the button
-      confetti({
-        particleCount: 20,
-        spread: 40,
-        origin: { x, y },
-        colors: ["#1f2937"], // gray-800 to match logo
-        disableForReducedMotion: true,
-        ticks: 100,
-        gravity: 1,
-        scalar: 0.8, // Thinner ribbons
-        shapes: ["square"], // Ribbon-like particles
-        startVelocity: 15, // Slower upward movement
-        drift: 0, // No horizontal drift
-      });
 
       // Go to loading page immediately
       setTimeout(() => {

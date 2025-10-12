@@ -2,7 +2,7 @@
 
 import { useRef, useState, useEffect } from "react";
 import { useFrame, useThree, Canvas } from "@react-three/fiber";
-import { useGLTF, Environment, OrbitControls } from "@react-three/drei";
+import { useGLTF, OrbitControls } from "@react-three/drei";
 import * as THREE from "three";
 
 /**

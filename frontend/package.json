@@ -3,8 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "bun run next dev --turbopack",
-    "build": "bun run next build --turbopack",
+    "dev": "bun run next dev",
+    "dev:turbo": "bun run next dev --turbopack",
+    "build": "bun run next build",
+    "build:turbo": "bun run next build --turbopack",
     "start": "bun run next start",
     "lint": "bun run eslint",
     "install": "bun install"
@@ -49,19 +51,18 @@
     "input-otp": "^1.4.2",
     "lucide-react": "^0.487.0",
     "motion": "*",
-    "next": "15.5.4",
+    "next": "15.5.3",
     "next-themes": "^0.4.6",
     "react": "19.1.0",
-    "react-day-picker": "^8.10.1",
     "react-dom": "19.1.0",
+    "react-day-picker": "^8.10.1",
     "react-hook-form": "^7.55.0",
     "react-resizable-panels": "^2.1.7",
     "recharts": "^2.15.2",
     "sonner": "^2.0.3",
     "tailwind-merge": "*",
     "three": "^0.180.0",
-    "vaul": "^1.1.2",
-    "wiggle": "^0.0.17"
+    "vaul": "^1.1.2"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
