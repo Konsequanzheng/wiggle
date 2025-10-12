@@ -88,83 +88,57 @@ export function ImageUploadModal({
     if (canSubmit && frontImage && backImage) {
       setIsUploading(true);
 
-      // Skip API call in development mode
-      if (process.env.NODE_ENV === "development") {
-        console.log("Dev mode: Skipping API call, files would be sent:", {
-          frontImage: frontImage.name,
-          backImage: backImage.name,
-        });
+      // Get button position for localized confetti
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = (rect.left + rect.width / 2) / window.innerWidth;
+      const y = (rect.top + rect.height / 2) / window.innerHeight;
 
-        // Get button position for localized confetti
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = (rect.left + rect.width / 2) / window.innerWidth;
-        const y = (rect.top + rect.height / 2) / window.innerHeight;
+      // Trigger subtle confetti animation around the button
+      confetti({
+        particleCount: 20,
+        spread: 40,
+        origin: { x, y },
+        colors: ["#1f2937"], // gray-800 to match logo
+        disableForReducedMotion: true,
+        ticks: 100,
+        gravity: 1,
+        scalar: 0.8, // Thinner ribbons
+        shapes: ["square"], // Ribbon-like particles
+        startVelocity: 15, // Slower upward movement
+        drift: 0, // No horizontal drift
+      });
 
-        // Trigger subtle confetti animation around the button
-        confetti({
-          particleCount: 20,
-          spread: 40,
-          origin: { x, y },
-          colors: ["#1f2937"], // gray-800 to match logo
-          disableForReducedMotion: true,
-          ticks: 100,
-          gravity: 1,
-          scalar: 0.8, // Thinner ribbons
-          shapes: ["square"], // Ribbon-like particles
-          startVelocity: 15, // Slower upward movement
-          drift: 0, // No horizontal drift
-        });
+      // Go to loading page immediately
+      setTimeout(() => {
+        onSubmit();
+      }, 300);
 
-        // Small delay before transitioning to next page
-        setTimeout(() => {
-          onSubmit();
-        }, 300);
-        return;
-      }
-
+      // Make API call in background (don't await it)
       try {
         // Create FormData with the files
         const formData = new FormData();
-        formData.append("front.png", frontImage);
-        formData.append("back.png", backImage);
+        formData.append("userId", "test_user_123");
+        formData.append("front", frontImage);
+        formData.append("back", backImage);
 
         // Send to API endpoint
-        const response = await fetch("/api/generate-texture", {
-          method: "POST",
-          body: formData,
-        });
+        const response = await fetch(
+          "https://ykzou1214--wiggle-integrated-api-fastapi-app.modal.run/api/texture/generate",
+          {
+            method: "POST",
+            body: formData,
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Failed to generate texture");
         }
 
-        // Get button position for localized confetti
-        const rect = e.currentTarget.getBoundingClientRect();
-        const x = (rect.left + rect.width / 2) / window.innerWidth;
-        const y = (rect.top + rect.height / 2) / window.innerHeight;
-
-        // Trigger subtle confetti animation around the button
-        confetti({
-          particleCount: 20,
-          spread: 40,
-          origin: { x, y },
-          colors: ["#1f2937"], // gray-800 to match logo
-          disableForReducedMotion: true,
-          ticks: 100,
-          gravity: 1,
-          scalar: 0.8, // Thinner ribbons
-          shapes: ["square"], // Ribbon-like particles
-          startVelocity: 15, // Slower upward movement
-          drift: 0, // No horizontal drift
-        });
-
-        // Small delay before transitioning to next page
-        setTimeout(() => {
-          onSubmit();
-        }, 300);
+        // Parse the response
+        const result = await response.json();
+        console.log("API Response:", result);
       } catch (error) {
         console.error("Error uploading images:", error);
-        setIsUploading(false);
         // You might want to show an error message to the user here
       }
     }
