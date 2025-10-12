@@ -8,19 +8,9 @@ interface LoadingPageProps {
 }
 
 export function LoadingPage({ onComplete }: LoadingPageProps) {
-  const [isComplete, setIsComplete] = useState(false);
-
   useEffect(() => {
-    // Skip loading in development mode
-    if (process.env.NODE_ENV === "development") {
-      console.log("Dev mode: Skipping loading animation");
-      onComplete?.();
-      return;
-    }
-
     // Simulate loading completion after animation
     const timer = setTimeout(() => {
-      setIsComplete(true);
       onComplete?.();
     }, 16500);
     return () => clearTimeout(timer);

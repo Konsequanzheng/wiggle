@@ -1,6 +1,6 @@
-# Wiggle - AI-Powered T-Shirt Design Platform
+# Wiggly - AI-Powered 3D Interactive Animation Design Platform
 
-Wiggle is an innovative platform that transforms user-uploaded images into custom T-shirt designs with AI-generated textures and 3D models. The platform combines computer vision, AI texture generation, and 3D modeling to create personalized apparel.
+Wiggly is an innovative platform that transforms user-uploaded images into custom T-shirt designs with AI-generated textures and 3D models. The platform combines computer vision, AI texture generation, and 3D modeling to create personalized apparel.
 
 ## 🚀 Features
 
