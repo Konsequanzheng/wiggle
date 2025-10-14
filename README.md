@@ -226,4 +226,4 @@ For support and questions:
 
 ---
 
-Built with ❤️ for the Big Berlin Hackathon
+Built with ❤️ for the Big Berlin Hackathon.
